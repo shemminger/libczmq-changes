@@ -27,6 +27,15 @@
 #ifndef __ZMSG_H_INCLUDED__
 #define __ZMSG_H_INCLUDED__
 
+// If using GCC this causes checking of syntax of format strings
+#ifndef GCC_PRINTFLIKE
+#ifdef __GNUC__
+#define GCC_PRINTFLIKE(fmt,var) __attribute__((format(printf,fmt,var)))
+#else
+#define GCC_PRINTFLIKE(fmt,var) /*nothing*/
+#endif
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -84,12 +93,14 @@ int
 //  Push string as new frame to front of message.
 //  Returns 0 on success, -1 on error.
 int
-    zmsg_pushstr (zmsg_t *self, const char *format, ...);
+    zmsg_pushstr (zmsg_t *self, const char *format, ...)
+	GCC_PRINTFLIKE(2,3);
 
 //  Push string as new frame to end of message.
 //  Returns 0 on success, -1 on error.
 int
-    zmsg_addstr (zmsg_t *self, const char *format, ...);
+    zmsg_addstr (zmsg_t *self, const char *format, ...)
+	GCC_PRINTFLIKE(2,3);
 
 //  Pop frame off front of message, return as fresh string
 char *

@@ -27,9 +27,19 @@
 #ifndef __ZSOCKET_H_INCLUDED__
 #define __ZSOCKET_H_INCLUDED__
 
+/* Macro for usage of GCC's printf compilation warnings */
+#ifndef GCC_PRINTFLIKE
+#ifdef __GNUC__
+#define GCC_PRINTFLIKE(fmt,var) __attribute__((format(printf,fmt,var)))
+#else
+#define GCC_PRINTFLIKE(fmt,var) /*nothing*/
+#endif
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 
 //  @interface
 //  This port range is defined by IANA for dynamic or private ports
@@ -54,12 +64,14 @@ void
 //  bind succeeded with the specified port number. Always returns the
 //  port number if successful.
 int
-    zsocket_bind (void *socket, const char *format, ...);
+    zsocket_bind (void *socket, const char *format, ...)
+	GCC_PRINTFLIKE(2,3);
 
 //  Connect a socket to a formatted endpoint
 //  Returns 0 if OK, -1 if the endpoint was invalid.
 int
-    zsocket_connect (void *socket, const char *format, ...);
+    zsocket_connect (void *socket, const char *format, ...)
+	GCC_PRINTFLIKE(2,3);
 
 //  Returns socket type as printable constant string
 char *
